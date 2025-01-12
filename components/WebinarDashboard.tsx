@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Calendar, Link, FileText, Users, TrendingUp } from 'lucide-react';
-import Plot from 'react-plotly.js';
+import dynamic from 'next/dynamic';
+
 
 interface IEnrollment {
   _id: string;
@@ -28,8 +29,11 @@ interface ICategory {
   date: string;
   link: string;
 }
-
+const Plot = dynamic(() => import('react-plotly.js'), {
+  ssr: false,
+});
 const DashboardComponent = () => {
+
   if (typeof window === 'undefined') return null
   const router = useRouter();
   const { data: session } = useSession();
