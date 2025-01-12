@@ -1,28 +1,39 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
-import Lottie from "lottie-react";
-import { redirect } from "next/navigation";
-import successAnimation from "@/components/SuccessTick.json";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import "../../components/Success.page.css";
 
+// Dynamically import Lottie component
+const Lottie = dynamic(() => import("lottie-react"), {
+  ssr: false,
+  loading: () => <div className="lottie-animation-placeholder" />
+});
+
 const Success = () => {
+    const router = useRouter();
     const [isRedirecting, setIsRedirecting] = useState(false);
     const [countdown, setCountdown] = useState(15);
     
     useEffect(() => {
         // Start countdown immediately
         const countdownInterval = setInterval(() => {
-            setCountdown(prev => prev - 1);
+            setCountdown(prev => {
+                if (prev <= 1) {
+                    clearInterval(countdownInterval);
+                }
+                return prev - 1;
+            });
         }, 1000);
 
-        // Set redirecting message after 7 seconds
+        // Set redirecting message after 5 seconds
         const redirectMessageTimer = setTimeout(() => {
             setIsRedirecting(true);
         }, 5000);
 
-        // Redirect after 10 seconds
+        // Redirect after 15 seconds
         const redirectTimer = setTimeout(() => {
-            redirect("/");
+            router.push("/");
         }, 15000);
 
         // Cleanup
@@ -31,9 +42,12 @@ const Success = () => {
             clearTimeout(redirectMessageTimer);
             clearTimeout(redirectTimer);
         };
-    }, []);
+    }, [router]);
 
     const date = new Date();
+
+    // Import animation data dynamically
+    const successAnimation = require("@/components/SuccessTick.json");
 
     return (
         <div className="success-page">
