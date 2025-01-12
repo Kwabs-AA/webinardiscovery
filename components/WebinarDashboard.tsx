@@ -1,9 +1,15 @@
+"use client"
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Calendar, Link, FileText, Users, TrendingUp } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
+// Dynamically import Plot with no SSR
+const Plot = dynamic(
+  () => import('react-plotly.js'),
+  { ssr: false }
+);
 
 interface IEnrollment {
   _id: string;
@@ -29,35 +35,38 @@ interface ICategory {
   date: string;
   link: string;
 }
-const Plot = dynamic(() => import('react-plotly.js'), {
-  ssr: false,
-});
-const DashboardComponent = () => {
 
-  if (typeof window === 'undefined') return null
+const DashboardComponent = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const email = session?.user?.email;
   const [enrollments, setEnrollments] = useState<IEnrollment[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!email || !mounted) return;
+      
       try {
         setLoading(true);
-        if (!email) return;
+        const [enrollRes, eventsRes] = await Promise.all([
+          fetch(`/api/enrollment?email=${encodeURIComponent(email)}`),
+          fetch(`/api/webinars?email=${encodeURIComponent(email)}`)
+        ]);
 
-        // Fetch user's enrollments
-        const enrollRes = await fetch(`/api/enrollment?email=${encodeURIComponent(email)}`);
-        const enrollData = await enrollRes.json();
+        const [enrollData, eventsData] = await Promise.all([
+          enrollRes.json(),
+          eventsRes.json()
+        ]);
+
         setEnrollments(enrollData);
-
-        // Fetch user's upcoming events
-        const eventsRes = await fetch(`/api/webinars?email=${encodeURIComponent(email)}`);
-        const eventsData = await eventsRes.json();
         setUpcomingEvents(eventsData);
-
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
@@ -65,10 +74,12 @@ const DashboardComponent = () => {
       }
     };
 
-    if (email) {
-      fetchData();
-    }
-  }, [email]);
+    fetchData();
+  }, [email, mounted]);
+
+  if (!mounted) {
+    return null;
+  }
 
   // Calculate statistics
   const totalEnrollments = enrollments.length;
