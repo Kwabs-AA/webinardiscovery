@@ -21,7 +21,7 @@ const Card = ({ name, description, _id, link }: Props) => {
     };
 
     return (
-        <div className="card bg-base-100 w-96 shadow-xl mx-12 sm:my-3">
+        <div className="card bg-base-100 w-72 shadow-xl mx-4 sm:my-3">
             <figure className="relative w-full " style={{ paddingTop: '56.25%' }}>
                 <img
                     src={link}
