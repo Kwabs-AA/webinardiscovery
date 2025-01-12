@@ -30,6 +30,7 @@ interface ICategory {
 }
 
 const DashboardComponent = () => {
+  if (typeof window === 'undefined') return null
   const router = useRouter();
   const { data: session } = useSession();
   const email = session?.user?.email;
