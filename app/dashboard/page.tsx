@@ -1,13 +1,15 @@
-"use client"
-import DashboardComponent from "@/components/WebinarDashboard"
-import { SessionProvider } from "next-auth/react"
+"use client";
+import dynamic from "next/dynamic";
+import { SessionProvider } from "next-auth/react";
+
+const DashboardComponent = dynamic(() => import("@/components/WebinarDashboard"), { ssr: false });
 
 const DashboardPage = () => {
   return (
     <SessionProvider>
-        <DashboardComponent/>
+      <DashboardComponent />
     </SessionProvider>
-  )
-}
+  );
+};
 
-export default DashboardPage
+export default DashboardPage;
