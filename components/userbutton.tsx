@@ -22,7 +22,7 @@ const Userbutton = () => {
     }
 
   return (
-    <nav className="h-10 bg-base-100 text-xl border-none hover:bg-base-300 btn">
+    <nav className="h-10 bg-base-100 text-xl border-none btn">
         {
             session?(
                 <DropdownMenu modal={false}>
