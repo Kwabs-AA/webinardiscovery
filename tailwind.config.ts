@@ -2,6 +2,7 @@ import type { Config } from "tailwindcss";
 import { withUt } from "uploadthing/tw";
 
 export default withUt({
+  darkMode: 'media',  // Enable dark mode based on system preference
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
