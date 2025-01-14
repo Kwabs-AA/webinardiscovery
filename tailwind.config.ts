@@ -2,7 +2,6 @@ import type { Config } from "tailwindcss";
 import { withUt } from "uploadthing/tw";
 
 export default withUt({
-  // No dark mode support
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -62,6 +61,6 @@ export default withUt({
   plugins: [
     require('daisyui'),
     require("tailwindcss-animate"),
-	require('tailwind-scrollbar-hide')
+    require('tailwind-scrollbar-hide')
   ],
 } satisfies Config);
