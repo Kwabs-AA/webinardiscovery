@@ -69,7 +69,7 @@ const Navbar = ({ children }:any) => {
         </div>
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-auto scrollbar-hide">
         <AnimatePresence mode="wait">
           {shortnav ? (
             <motion.div
@@ -77,6 +77,7 @@ const Navbar = ({ children }:any) => {
               variants={navVariants}
               initial="hidden"
               animate="visible"
+              className="h-full"
               exit="exit"
             >
               <ShortLeftHomeNav />
