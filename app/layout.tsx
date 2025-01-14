@@ -34,7 +34,7 @@ export default function RootLayout({
   const pathname = usePathname();
   const noHeaderRoutes=['/signin','/signup','/success']
   return (
-    <html lang="en" >
+    <html lang="en" data-theme="light">
       <head>
         <link rel="icon" href="/webinarlogo.png" type="image/png" />
         <title>Webinar</title>
