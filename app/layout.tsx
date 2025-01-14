@@ -34,14 +34,14 @@ export default function RootLayout({
   const pathname = usePathname();
   const noHeaderRoutes=['/signin','/signup','/success']
   return (
-    <html lang="en">
+    <html lang="en" >
       <head>
         <link rel="icon" href="/webinarlogo.png" type="image/png" />
         <title>Webinar</title>
         <meta name="description" content="Teach the world." />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`} 
       >
         {!noHeaderRoutes.includes(pathname)? (
           <Navbar>
