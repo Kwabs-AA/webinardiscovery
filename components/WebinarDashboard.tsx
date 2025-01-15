@@ -69,8 +69,13 @@ const DashboardComponent = () => {
             setLoading(false); // Stop loading
           }
         }
-        if(status === "unauthenticated" && !session?.user?.email){
-          router.push("/signin")
+        if(status === "unauthenticated"){
+          if(!session){
+            router.push("/signin")
+          }
+          else{
+            window.location.reload();
+          }
         }
       };
     
