@@ -43,48 +43,39 @@ const DashboardComponent = () => {
   const [loading, setLoading] = useState(true);
     
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout; // To manage delay timer
+      const fetchData = async () => {
+        if (status === "authenticated" && session?.user?.email) {
+          setLoading(true); // Start loading
+          try {
+            const [enrollRes, eventsRes] = await Promise.all([
+              fetch(`/api/enrollment?email=${encodeURIComponent(session.user.email)}`),
+              fetch(`/api/webinars?email=${encodeURIComponent(session.user.email)}`),
+            ]);
     
-    const fetchData = async () => {
-      if (status === "authenticated" && session?.user?.email) {
-        setLoading(true); // Start loading
-        try {
-          const [enrollRes, eventsRes] = await Promise.all([
-            fetch(`/api/enrollment?email=${encodeURIComponent(session.user.email)}`),
-            fetch(`/api/webinars?email=${encodeURIComponent(session.user.email)}`),
-          ]);
-  
-          if (!enrollRes.ok || !eventsRes.ok) {
-            throw new Error('Failed to fetch data');
+            if (!enrollRes.ok || !eventsRes.ok) {
+              throw new Error('Failed to fetch data');
+            }
+    
+            const [enrollData, eventsData] = await Promise.all([
+              enrollRes.json(),
+              eventsRes.json(),
+            ]);
+    
+            setEnrollments(enrollData);
+            setUpcomingEvents(eventsData);
+          } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+          } finally {
+            setLoading(false); // Stop loading
           }
-  
-          const [enrollData, eventsData] = await Promise.all([
-            enrollRes.json(),
-            eventsRes.json(),
-          ]);
-  
-          setEnrollments(enrollData);
-          setUpcomingEvents(eventsData);
-        } catch (error) {
-          console.error('Error fetching dashboard data:', error);
-        } finally {
-          setLoading(false); // Stop loading
-        }
-      } else if (status === "unauthenticated") {
-        // Add a slight delay before redirecting
-        timeoutId = setTimeout(() => {
+        } else if (status === "unauthenticated") {
           router.push('/signin');
-        }, 1000); // Adjust delay duration as needed (e.g., 1000ms = 1 second)
-      }
-    };
-  
-    fetchData();
-  
-    // Cleanup timeout on component unmount
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [status, session, router]);
+        }
+      };
+    
+      fetchData();
+    }, [status, session, router]);
+    
 
   // Show loading state while checking authentication
    // Calculate statistics

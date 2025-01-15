@@ -6,6 +6,7 @@ import { FaRegRegistered } from "react-icons/fa";
 import { IoIosLogOut } from "react-icons/io";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { useEffect } from "react";
 
 interface LongLeftHomeNavProps {
   isOpen: boolean;
@@ -33,6 +34,20 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
   const handleLinkClick = () => {
     onClose(); // Close the sidebar when a link is clicked
   };
+
+  // Add or remove the "no-scroll" class on the body when the sidebar is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+
+    // Cleanup: remove the no-scroll class when the component unmounts or sidebar is closed
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
+  }, [isOpen]);
 
   return (
     <>
