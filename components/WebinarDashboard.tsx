@@ -2,10 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Calendar, Link, FileText, Users, TrendingUp } from 'lucide-react';
+import { Calendar, Link, Users, TrendingUp } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
-// Dynamically import Plot with no SSR
 const Plot = dynamic(
   () => import('react-plotly.js'),
   { ssr: false }
@@ -38,49 +37,56 @@ interface ICategory {
 
 const DashboardComponent = () => {
   const router = useRouter();
-  const { data: session } = useSession();
-  const email = session?.user?.email;
+  const { data: session, status } = useSession(); // Added status
   const [enrollments, setEnrollments] = useState<IEnrollment[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!email || !mounted) return;
-      
-      try {
-        setLoading(true);
-        const [enrollRes, eventsRes] = await Promise.all([
-          fetch(`/api/enrollment?email=${encodeURIComponent(email)}`),
-          fetch(`/api/webinars?email=${encodeURIComponent(email)}`)
-        ]);
+      // Only fetch if we have a session and an email
+      if (status === "authenticated" && session?.user?.email) {
+        try {
+          const [enrollRes, eventsRes] = await Promise.all([
+            fetch(`/api/enrollment?email=${encodeURIComponent(session.user.email)}`),
+            fetch(`/api/webinars?email=${encodeURIComponent(session.user.email)}`)
+          ]);
 
-        const [enrollData, eventsData] = await Promise.all([
-          enrollRes.json(),
-          eventsRes.json()
-        ]);
+          if (!enrollRes.ok || !eventsRes.ok) {
+            throw new Error('Failed to fetch data');
+          }
 
-        setEnrollments(enrollData);
-        setUpcomingEvents(eventsData);
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-      } finally {
+          const [enrollData, eventsData] = await Promise.all([
+            enrollRes.json(),
+            eventsRes.json()
+          ]);
+
+          setEnrollments(enrollData);
+          setUpcomingEvents(eventsData);
+        } catch (error) {
+          console.error('Error fetching dashboard data:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else if (status === "unauthenticated") {
+        // If user is not authenticated, stop loading
         setLoading(false);
+        router.push('signin'); // Redirect to sign in page
       }
     };
 
     fetchData();
-  }, [email, mounted]);
+  }, [session, status, router]);
 
-  if (!mounted) {
-    return null;
+  // Show loading state while checking authentication
+  if (status === "loading") {
+    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
   }
 
+  // Show loading state while fetching data
+  if (loading) {
+    return <div className="flex justify-center items-center min-h-screen">Loading dashboard data...</div>;
+  }
   // Calculate statistics
   const totalEnrollments = enrollments.length;
   const totalUpcoming = upcomingEvents.length;

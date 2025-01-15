@@ -8,7 +8,11 @@ const DynamicDashboard = dynamic(
   () => import('../../components/WebinarDashboard'),
   { 
     ssr: false,
-    loading: () => <div>Loading...</div>
+    loading: () => (
+      <div className="flex justify-center items-center min-h-screen">
+        Loading dashboard...
+      </div>
+    )
   }
 );
 
