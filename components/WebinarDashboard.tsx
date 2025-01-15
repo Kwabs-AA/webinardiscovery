@@ -41,53 +41,41 @@ const DashboardComponent = () => {
   const [enrollments, setEnrollments] = useState<IEnrollment[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState(true);
-
+    
   useEffect(() => {
-    const fetchData = async () => {
-      // Only fetch if we have a session and an email
-      if (status === "authenticated" && session?.user?.email) {
-        try {
-          const [enrollRes, eventsRes] = await Promise.all([
-            fetch(`/api/enrollment?email=${encodeURIComponent(session.user.email)}`),
-            fetch(`/api/webinars?email=${encodeURIComponent(session.user.email)}`)
-          ]);
-
-          if (!enrollRes.ok || !eventsRes.ok) {
-            throw new Error('Failed to fetch data');
+      const fetchData = async () => {
+        if (status === "authenticated" && session?.user?.email) {
+          setLoading(true); // Start loading
+          try {
+            const [enrollRes, eventsRes] = await Promise.all([
+              fetch(`/api/enrollment?email=${encodeURIComponent(session.user.email)}`),
+              fetch(`/api/webinars?email=${encodeURIComponent(session.user.email)}`),
+            ]);
+    
+            if (!enrollRes.ok || !eventsRes.ok) {
+              throw new Error('Failed to fetch data');
+            }
+    
+            const [enrollData, eventsData] = await Promise.all([
+              enrollRes.json(),
+              eventsRes.json(),
+            ]);
+    
+            setEnrollments(enrollData);
+            setUpcomingEvents(eventsData);
+          } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+          } finally {
+            setLoading(false); // Stop loading
           }
-
-          const [enrollData, eventsData] = await Promise.all([
-            enrollRes.json(),
-            eventsRes.json()
-          ]);
-
-          setEnrollments(enrollData);
-          setUpcomingEvents(eventsData);
-        } catch (error) {
-          console.error('Error fetching dashboard data:', error);
-        } finally {
-          setLoading(false);
+        } else if (status === "unauthenticated") {
+          router.push('/signin');
         }
-      } 
-      if (status === "loading") {
-        return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
-      }
+      };
     
-      // Show loading state while fetching data
-      if (loading) {
-        return <div className="flex justify-center items-center min-h-screen">Loading dashboard data...</div>;
-      }
+      fetchData();
+    }, [status, session, router]);
     
-      
-      else if (status === "unauthenticated") {
-        // If user is not authenticated, stop loading
-        setLoading(false);
-        router.push('signin'); // Redirect to sign in page
-      }
-    };
-
-    fetchData();
-  }, [session, status, router]);
 
   // Show loading state while checking authentication
    // Calculate statistics
