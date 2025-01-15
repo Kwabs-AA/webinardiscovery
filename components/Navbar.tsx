@@ -1,17 +1,30 @@
 "use client"
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Userbutton from "./userbutton"
 import ShortLeftHomeNav from "./ShortLeftHomeNav"
 import LongLeftHomeNav from "./LongLeftHomeNav"
 import { SessionProvider } from "next-auth/react"
 
-const Navbar = ({ children }:any) => {
-  const [shortnav, setShortnav] = useState(true)
+
+const Navbar = ({ children }: any) => {
+  const [shortnav, setShortnav] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   
+  useEffect(() => {
+    setMounted(true);
+    setShortnav(true);
+  }, []);
+
   const handleNav = () => {
-    setShortnav(!shortnav)
-  }
+    setShortnav(!shortnav);
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleCloseMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   const navVariants = {
     hidden: {
@@ -34,11 +47,13 @@ const Navbar = ({ children }:any) => {
         ease: "easeIn"
       }
     }
-  }
+  };
+
+  if (!mounted) return null;
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="navbar bg-base-100 border-b-2 border-gray-300 sticky top-0 z-50">
+    <div className="flex flex-col h-screen overflow-hidden">
+      <div className="navbar bg-base-100 border-b-2 border-gray-300 sticky top-0 z-50 h-16">
         <div className="flex-none">
           <motion.button 
             className="btn btn-square btn-ghost"
@@ -69,7 +84,7 @@ const Navbar = ({ children }:any) => {
         </div>
       </div>
 
-      <div className="flex flex-1 overflow-auto scrollbar-hide">
+      <div className="flex flex-1 overflow-hidden">
         <AnimatePresence mode="wait">
           {shortnav ? (
             <motion.div
@@ -77,8 +92,8 @@ const Navbar = ({ children }:any) => {
               variants={navVariants}
               initial="hidden"
               animate="visible"
-              className="h-full"
               exit="exit"
+              className="h-full"
             >
               <ShortLeftHomeNav />
             </motion.div>
@@ -89,8 +104,9 @@ const Navbar = ({ children }:any) => {
               initial="hidden"
               animate="visible"
               exit="exit"
+              className="h-full"
             >
-              <LongLeftHomeNav />
+              <LongLeftHomeNav isOpen={isMenuOpen} onClose={handleCloseMenu} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -100,7 +116,6 @@ const Navbar = ({ children }:any) => {
         </main>
       </div>
     </div>
-  )
-}
-
-export default Navbar
+  );
+};
+export default Navbar;

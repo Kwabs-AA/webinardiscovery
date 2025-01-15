@@ -42,7 +42,7 @@ const ShortLeftHomeNav = () => {
           {/* Logout Button */}
           <button
             aria-label="Logout"
-            className="flex items-center justify-center w-12 h-12 rounded-lg hover:bg-red-50 hover:text-red-600 transition"
+            className="flex items-center justify-center w-12 h-12 rounded-lg hover:bg-red-50 hover:text-red-600 transition mb-20"
             onClick={handleSignout}
           >
             <IoIosLogOut className="text-2xl" />
