@@ -1,5 +1,4 @@
-
-"use client"
+"use client";
 import { FaHome } from "react-icons/fa";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { IoIosHelpCircle } from "react-icons/io";
@@ -27,13 +26,21 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
     });
   };
 
+  const handleOverlayClick = () => {
+    onClose(); // Close the sidebar when the overlay is clicked
+  };
+
+  const handleLinkClick = () => {
+    onClose(); // Close the sidebar when a link is clicked
+  };
+
   return (
     <>
       {/* Overlay for Small Devices */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden"
-          onClick={onClose}
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={handleOverlayClick}
         />
       )}
 
@@ -57,7 +64,7 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
                 key={index}
                 href={item.href}
                 className="flex items-center w-full px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-blue-600 transition-all duration-200 group"
-                onClick={onClose}
+                onClick={handleLinkClick}
               >
                 <span className="inline-flex items-center justify-center w-10 h-10 group-hover:text-blue-600 transition-colors duration-200">
                   {item.icon}
@@ -71,7 +78,10 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
         {/* Logout Button Container */}
         <div className="p-4 border-t border-gray-200 bg-white mt-auto mb-20">
           <button
-            onClick={handleSignout}
+            onClick={() => {
+              handleSignout();
+              onClose(); // Close the sidebar after signing out
+            }}
             className="flex items-center w-full px-4 py-3 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition-all duration-200 group"
           >
             <span className="inline-flex items-center justify-center w-10 h-10 group-hover:text-red-600 transition-colors duration-200">

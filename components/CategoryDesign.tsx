@@ -139,7 +139,7 @@ const CategoryDesign = () => {
                   <div className="flex items-center space-x-3 rounded-lg bg-gray-50 p-3 sm:p-4">
                     <Mail className="h-4 sm:h-5 w-4 sm:w-5 flex-shrink-0 text-blue-600" />
                     <div className="min-w-0">
-                      <p className="text-xs sm:text-sm font-medium text-gray-600">Email</p>
+                      <p className="text-xs sm:text-sm font-medium text-gray-600">Creator's Email</p>
                       <p className="truncate text-sm sm:text-base text-gray-800">{category.email}</p>
                     </div>
                   </div>

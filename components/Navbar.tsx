@@ -1,61 +1,55 @@
 "use client"
-import { useState,useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import Userbutton from "./userbutton"
-import ShortLeftHomeNav from "./ShortLeftHomeNav"
-import LongLeftHomeNav from "./LongLeftHomeNav"
-import { SessionProvider } from "next-auth/react"
-
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Userbutton from "./userbutton";
+import ShortLeftHomeNav from "./ShortLeftHomeNav";
+import LongLeftHomeNav from "./LongLeftHomeNav";
+import { SessionProvider } from "next-auth/react";
 
 const Navbar = ({ children }: any) => {
   const [shortnav, setShortnav] = useState(true);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  
+
   useEffect(() => {
     setMounted(true);
-    setShortnav(true);
+    setShortnav(true); // Initialize shortnav
   }, []);
 
   const handleNav = () => {
-    setShortnav(!shortnav);
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const handleCloseMenu = () => {
-    setIsMenuOpen(false);
+    setShortnav(!shortnav); // Toggle shortnav state
   };
 
   const navVariants = {
     hidden: {
       x: -300,
-      opacity: 0
+      opacity: 0,
     },
     visible: {
       x: 0,
       opacity: 1,
       transition: {
         duration: 0.3,
-        ease: "easeOut"
-      }
+        ease: "easeOut",
+      },
     },
     exit: {
       x: -300,
       opacity: 0,
       transition: {
         duration: 0.3,
-        ease: "easeIn"
-      }
-    }
+        ease: "easeIn",
+      },
+    },
   };
 
   if (!mounted) return null;
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
+      {/* Navbar */}
       <div className="navbar bg-base-100 border-b-2 border-gray-300 sticky top-0 z-50 h-16">
         <div className="flex-none">
-          <motion.button 
+          <motion.button
             className="btn btn-square btn-ghost"
             onClick={handleNav}
             whileHover={{ scale: 1.1 }}
@@ -84,38 +78,29 @@ const Navbar = ({ children }: any) => {
         </div>
       </div>
 
+      {/* Main Layout */}
       <div className="flex flex-1 overflow-hidden">
         <AnimatePresence mode="wait">
-          {shortnav ? (
-            <motion.div
-              key="short"
-              variants={navVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="h-full"
-            >
-              <ShortLeftHomeNav />
-            </motion.div>
-          ) : (
+          {!shortnav && (
             <motion.div
               key="long"
               variants={navVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="h-full"
+              className={`h-full ${
+                shortnav ? "hidden md:block" : "fixed md:relative z-40"
+              }`}
             >
-              <LongLeftHomeNav isOpen={isMenuOpen} onClose={handleCloseMenu} />
+              <LongLeftHomeNav isOpen={!shortnav} onClose={handleNav} />
             </motion.div>
           )}
         </AnimatePresence>
-        
-        <main className="flex-1 overflow-auto p-4">
-          {children}
-        </main>
+
+        <main className="flex-1 overflow-auto p-4">{children}</main>
       </div>
     </div>
   );
 };
+
 export default Navbar;
