@@ -68,7 +68,18 @@ const DashboardComponent = () => {
         } finally {
           setLoading(false);
         }
-      } else if (status === "unauthenticated") {
+      } 
+      if (status === "loading") {
+        return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+      }
+    
+      // Show loading state while fetching data
+      if (loading) {
+        return <div className="flex justify-center items-center min-h-screen">Loading dashboard data...</div>;
+      }
+    
+      
+      else if (status === "unauthenticated") {
         // If user is not authenticated, stop loading
         setLoading(false);
         router.push('signin'); // Redirect to sign in page
@@ -79,15 +90,7 @@ const DashboardComponent = () => {
   }, [session, status, router]);
 
   // Show loading state while checking authentication
-  if (status === "loading") {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
-  }
-
-  // Show loading state while fetching data
-  if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading dashboard data...</div>;
-  }
-  // Calculate statistics
+   // Calculate statistics
   const totalEnrollments = enrollments.length;
   const totalUpcoming = upcomingEvents.length;
   const recentEnrollments = enrollments.slice(0, 5);
