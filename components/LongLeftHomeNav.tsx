@@ -46,47 +46,48 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
   return (
     <nav
       className={`
-        fixed md:relative
-        top-0 left-0
+        fixed top-16 md:top-0 left-0
         ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-        transition-transform duration-300
-        w-64 md:w-[240px] h-full
+        transition-transform duration-300 ease-in-out
+        w-64 md:w-[240px] 
+        h-[calc(100vh-4rem)] md:h-screen
         bg-white border-r border-gray-200
         z-40
-        flex flex-col
       `}
     >
-      <div className="flex-grow overflow-y-auto">
-        <div className="p-4 space-y-1">
-          {navItems.map((item, index) => (
-            <Link
-              key={index}
-              href={item.href}
-              className="flex items-center w-full px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-blue-600 transition-all duration-200 group"
-              onClick={handleLinkClick}
-            >
-              <span className="inline-flex items-center justify-center w-10 h-10 group-hover:text-blue-600 transition-colors duration-200">
-                {item.icon}
-              </span>
-              <span className="ml-3 text-sm font-medium">{item.label}</span>
-            </Link>
-          ))}
+      <div className="flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4 space-y-1">
+            {navItems.map((item, index) => (
+              <Link
+                key={index}
+                href={item.href}
+                className="flex items-center w-full px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-blue-600 transition-all duration-200 group"
+                onClick={handleLinkClick}
+              >
+                <span className="inline-flex items-center justify-center w-10 h-10 group-hover:text-blue-600 transition-colors duration-200">
+                  {item.icon}
+                </span>
+                <span className="ml-3 text-sm font-medium">{item.label}</span>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="p-4 border-t border-gray-200 bg-white mt-auto">
-        <button
-          onClick={() => {
-            handleSignout();
-            onClose();
-          }}
-          className="flex items-center w-full px-4 py-3 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition-all duration-200 group"
-        >
-          <span className="inline-flex items-center justify-center w-10 h-10 group-hover:text-red-600 transition-colors duration-200">
-            <IoIosLogOut className="text-2xl" />
-          </span>
-          <span className="ml-3 text-sm font-medium">Logout</span>
-        </button>
+        <div className="p-4 border-t border-gray-200 bg-white">
+          <button
+            onClick={() => {
+              handleSignout();
+              onClose();
+            }}
+            className="flex items-center w-full px-4 py-3 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition-all duration-200 group"
+          >
+            <span className="inline-flex items-center justify-center w-10 h-10 group-hover:text-red-600 transition-colors duration-200">
+              <IoIosLogOut className="text-2xl" />
+            </span>
+            <span className="ml-3 text-sm font-medium">Logout</span>
+          </button>
+        </div>
       </div>
     </nav>
   );
