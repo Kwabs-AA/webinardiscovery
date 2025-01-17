@@ -9,14 +9,20 @@ import { SessionProvider } from "next-auth/react";
 const Navbar = ({ children }: any) => {
   const [shortnav, setShortnav] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    setShortnav(true); // Initialize shortnav
+    setShortnav(true);
   }, []);
 
   const handleNav = () => {
-    setShortnav(!shortnav); // Toggle shortnav state
+    setIsAnimating(true);
+    setShortnav(!shortnav);
+  };
+
+  const handleAnimationComplete = () => {
+    setIsAnimating(false);
   };
 
   const navVariants = {
@@ -80,7 +86,14 @@ const Navbar = ({ children }: any) => {
 
       {/* Main Layout */}
       <div className="flex flex-1 overflow-hidden">
-        <AnimatePresence mode="wait">
+        {/* Short Nav - Only visible when not animating and shortnav is true */}
+        {shortnav && !isAnimating && <ShortLeftHomeNav />}
+
+        {/* Long Nav - Animated */}
+        <AnimatePresence
+          mode="wait"
+          onExitComplete={handleAnimationComplete}
+        >
           {!shortnav && (
             <motion.div
               key="long"
@@ -88,9 +101,9 @@ const Navbar = ({ children }: any) => {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className={`h-full ${
-                shortnav ? "hidden md:block" : "fixed md:relative z-40"
-              }`}
+              className="fixed md:relative z-40"
+              onAnimationStart={() => setIsAnimating(true)}
+              onAnimationComplete={handleAnimationComplete}
             >
               <LongLeftHomeNav isOpen={!shortnav} onClose={handleNav} />
             </motion.div>
