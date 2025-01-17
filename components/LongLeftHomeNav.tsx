@@ -47,15 +47,16 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
     <nav
       className={`
         fixed md:relative
+        top-0 left-0
         ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         transition-transform duration-300
-        w-64 md:w-[240px] min-h-screen
+        w-64 md:w-[240px] h-full
         bg-white border-r border-gray-200
         z-40
         flex flex-col
       `}
     >
-      <div className="flex-grow overflow-y-auto md:pt-0">
+      <div className="flex-grow overflow-y-auto">
         <div className="p-4 space-y-1">
           {navItems.map((item, index) => (
             <Link
@@ -73,7 +74,7 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
         </div>
       </div>
 
-      <div className="p-4 border-t border-gray-200 bg-white mt-auto mb-20">
+      <div className="p-4 border-t border-gray-200 bg-white mt-auto">
         <button
           onClick={() => {
             handleSignout();
