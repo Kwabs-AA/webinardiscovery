@@ -22,7 +22,7 @@ const Card = ({ name, description, _id, link }: Props) => {
 
   return (
     <div className="w-full sm:w-72 md:w-80 lg:w-[32rem] xl:w-[40rem] 2xl:w-[48rem] mx-2 my-4 transition-transform duration-300 hover:scale-105">
-      <div className="card bg-base-100 shadow-xl h-full lg:w-96 lg:ml-4 md:w-80">
+      <div className="card bg-base-100 shadow-xl h-full lg:w-72 lg:ml-16 md:w-80">
         <figure className="relative w-full pt-[56.25%]">
           <img
             src={link}
