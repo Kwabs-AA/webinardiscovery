@@ -7,6 +7,7 @@ import { IoIosLogOut } from "react-icons/io";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface LongLeftHomeNavProps {
   isOpen: boolean;
@@ -28,14 +29,13 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
   };
 
   const handleOverlayClick = () => {
-    onClose(); // Close the sidebar when the overlay is clicked
+    onClose();
   };
 
   const handleLinkClick = () => {
-    onClose(); // Close the sidebar when a link is clicked
+    onClose();
   };
 
-  // Add or remove the "no-scroll" class on the body when the sidebar is open
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("no-scroll");
@@ -43,7 +43,6 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
       document.body.classList.remove("no-scroll");
     }
 
-    // Cleanup: remove the no-scroll class when the component unmounts or sidebar is closed
     return () => {
       document.body.classList.remove("no-scroll");
     };
@@ -51,15 +50,19 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
 
   return (
     <>
-      {/* Overlay for Small Devices */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={handleOverlayClick}
-        />
-      )}
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+            onClick={handleOverlayClick}
+          />
+        )}
+      </AnimatePresence>
 
-      {/* Sidebar */}
       <nav
         className={`
           fixed md:relative
@@ -71,7 +74,6 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
           flex flex-col
         `}
       >
-        {/* Scrollable Navigation Area */}
         <div className="flex-grow overflow-y-auto md:pt-0">
           <div className="p-4 space-y-1">
             {navItems.map((item, index) => (
@@ -90,12 +92,11 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
           </div>
         </div>
 
-        {/* Logout Button Container */}
         <div className="p-4 border-t border-gray-200 bg-white mt-auto mb-20">
           <button
             onClick={() => {
               handleSignout();
-              onClose(); // Close the sidebar after signing out
+              onClose();
             }}
             className="flex items-center w-full px-4 py-3 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition-all duration-200 group"
           >
