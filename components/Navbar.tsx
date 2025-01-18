@@ -89,7 +89,11 @@ const Navbar = ({ children }: any) => {
       {/* Main Layout */}
       <div className="flex pt-16 min-h-screen">
         {/* Short Nav */}
-        {shortnav && !isAnimating && <ShortLeftHomeNav />}
+        {shortnav && !isAnimating && (
+          <div className="fixed top-16 left-0 bottom-0 z-40">
+            <ShortLeftHomeNav />
+          </div>
+        )}
 
         {/* Long Nav */}
         <AnimatePresence mode="wait" onExitComplete={handleAnimationComplete}>
@@ -100,7 +104,7 @@ const Navbar = ({ children }: any) => {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="z-40"
+              className="fixed top-16 left-0 bottom-0 z-40"
               onAnimationStart={() => setIsAnimating(true)}
               onAnimationComplete={handleAnimationComplete}
             >
@@ -110,7 +114,7 @@ const Navbar = ({ children }: any) => {
         </AnimatePresence>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto p-4">
+        <main className="flex-1 overflow-auto p-4 ml-[72px]">
           {children}
         </main>
       </div>

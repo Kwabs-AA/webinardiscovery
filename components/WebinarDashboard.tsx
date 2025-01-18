@@ -145,9 +145,23 @@ const DashboardComponent = () => {
             <h3 className="text-lg font-semibold text-green-800">Next Event</h3>
             <TrendingUp className="h-6 w-6 text-green-800" />
           </div>
-          <p className="text-lg font-bold text-green-900 mt-2">
-            {upcomingEvents[0] ? formatDate(upcomingEvents[0].date) : 'No upcoming events'}
-          </p>
+          {upcomingEvents[0] ? (
+            <div className="mt-2">
+              <p className="text-lg font-bold  text-green-800">{upcomingEvents[0].name.toUpperCase()}</p>
+              <p className="text-sm  text-green-800">{formatDate(upcomingEvents[0].date)}</p>
+              <a 
+                href={upcomingEvents[0].webinarlink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-green-700 hover:text-red-700 text-sm mt-1"
+              >
+                <Link className="h-4 w-4 mr-1" />
+                Join Webinar
+              </a>
+            </div>
+          ) : (
+            <p className="text-lg font-bold text-green-900 mt-2">No upcoming events</p>
+          )}
         </div>
       </div>
 
