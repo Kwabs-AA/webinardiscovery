@@ -124,7 +124,7 @@ const CategoryDesign = () => {
                     <Link className="h-4 sm:h-5 w-4 sm:w-5 flex-shrink-0 text-blue-600" />
                     <div className="w-full">
                       <p className="text-xs sm:text-sm font-medium text-gray-600">Link</p>
-                      {session?.user?.email?(
+                      {session?(
                       <p className="break-all text-sm sm:text-base text-gray-800">{category.link}</p>
                     ):
                     <p className="break-all text-sm sm:text-base text-gray-800">You need to signin before you can have access to the link</p>

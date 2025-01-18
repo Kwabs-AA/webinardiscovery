@@ -31,32 +31,27 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
     onClose();
   };
 
+  // Remove body class manipulation as it's causing layout issues
   useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
-
     return () => {
-      document.body.classList.remove("no-scroll");
+      document.body.style.removeProperty('overflow');
     };
-  }, [isOpen]);
+  }, []);
 
   return (
     <nav
       className={`
-        fixed top-16 md:top-0 left-0
+        fixed top-0 left-0
         ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         transition-transform duration-300 ease-in-out
         w-64 md:w-[240px] 
-        h-[calc(100vh-4rem)] md:h-screen
+        h-screen
         bg-white border-r border-gray-200
         z-40
       `}
     >
-      <div className="flex flex-col h-full">
-        <div className="flex-1 overflow-y-auto">
+      <div className="flex flex-col h-full pt-16 md:pt-0">
+        <div className="flex-1 overflow-y-auto lg:mt-20">
           <div className="p-4 space-y-1">
             {navItems.map((item, index) => (
               <Link

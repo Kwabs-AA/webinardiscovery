@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Userbutton from "./userbutton";
@@ -51,49 +51,48 @@ const Navbar = ({ children }: any) => {
   if (!mounted) return null;
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col min-h-screen">
       {/* Navbar */}
-      <div className="navbar bg-base-100 border-b-2 border-gray-300 sticky top-0 z-50 h-16">
-        <div className="flex-none">
-          <motion.button
-            className="btn btn-square btn-ghost"
-            onClick={handleNav}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="inline-block h-5 w-5 stroke-current"
+      <header className="fixed top-0 left-0 right-0 bg-base-100 border-b-2 border-gray-300 z-50">
+        <div className="h-16 flex items-center">
+          <div className="flex-none">
+            <motion.button
+              className="btn btn-square btn-ghost"
+              onClick={handleNav}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              ></path>
-            </svg>
-          </motion.button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                className="inline-block h-5 w-5 stroke-current"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </motion.button>
+          </div>
+          <div className="flex-1"></div>
+          <div className="flex-none">
+            <SessionProvider>
+              <Userbutton />
+            </SessionProvider>
+          </div>
         </div>
-        <div className="flex-1"></div>
-        <div className="flex-none">
-          <SessionProvider>
-            <Userbutton />
-          </SessionProvider>
-        </div>
-      </div>
+      </header>
 
       {/* Main Layout */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Short Nav - Only visible when not animating and shortnav is true */}
+      <div className="flex pt-16 min-h-screen">
+        {/* Short Nav */}
         {shortnav && !isAnimating && <ShortLeftHomeNav />}
 
-        {/* Long Nav - Animated */}
-        <AnimatePresence
-          mode="wait"
-          onExitComplete={handleAnimationComplete}
-        >
+        {/* Long Nav */}
+        <AnimatePresence mode="wait" onExitComplete={handleAnimationComplete}>
           {!shortnav && (
             <motion.div
               key="long"
@@ -101,7 +100,7 @@ const Navbar = ({ children }: any) => {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="fixed md:relative z-40"
+              className="z-40"
               onAnimationStart={() => setIsAnimating(true)}
               onAnimationComplete={handleAnimationComplete}
             >
@@ -110,7 +109,10 @@ const Navbar = ({ children }: any) => {
           )}
         </AnimatePresence>
 
-        <main className="flex-1 overflow-auto p-4">{children}</main>
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto p-4">
+          {children}
+        </main>
       </div>
     </div>
   );
