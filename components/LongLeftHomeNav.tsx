@@ -51,7 +51,7 @@ const LongLeftHomeNav = ({ isOpen, onClose }: LongLeftHomeNavProps) => {
       `}
     >
       <div className="flex flex-col h-full pt-16 md:pt-0">
-        <div className="flex-1 overflow-y-auto lg:mt-20">
+        <div className="flex-1 overflow-y-auto lg:mt-16">
           <div className="p-4 space-y-1">
             {navItems.map((item, index) => (
               <Link

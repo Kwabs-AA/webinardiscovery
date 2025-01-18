@@ -12,12 +12,16 @@ const CategoryDesign = () => {
   const [error, setError] = useState(null);
   const [enrolling, setEnrolling] = useState(false);
   const [enrollmentStatus, setEnrollmentStatus] = useState("");
-  const { data: session } = useSession();
-  const route=useRouter()
-
-  
+  const [message, setMessage] = useState("");
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
+    if (status === "loading") return; // Wait until session status is determined
+    if (!session) {
+      setMessage("You need to sign in before you can have access to the link.");
+    }
+
     if (!id) return;
 
     const fetchData = async () => {
@@ -38,7 +42,7 @@ const CategoryDesign = () => {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, session, status]);
 
   const enrollHandler = async () => {
     if (!category || !category._id) return;
@@ -52,7 +56,7 @@ const CategoryDesign = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           webinarId: category._id,
-          email: session?.user?.email
+          email: session?.user?.email,
         }),
       });
 
@@ -69,7 +73,7 @@ const CategoryDesign = () => {
     }
   };
 
-  if (loading) {
+  if (loading || status === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center p-4">
@@ -124,11 +128,13 @@ const CategoryDesign = () => {
                     <Link className="h-4 sm:h-5 w-4 sm:w-5 flex-shrink-0 text-blue-600" />
                     <div className="w-full">
                       <p className="text-xs sm:text-sm font-medium text-gray-600">Link</p>
-                      {session?(
-                      <p className="break-all text-sm sm:text-base text-gray-800">{category.link}</p>
-                    ):
-                    <p className="break-all text-sm sm:text-base text-gray-800">You need to signin before you can have access to the link</p>
-                    }
+                      {session ? (
+                        <p className="break-all text-sm sm:text-base text-gray-800">
+                          {category.link}
+                        </p>
+                      ) : (
+                        <p className="text-sm sm:text-base text-gray-800">{message}</p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -151,7 +157,9 @@ const CategoryDesign = () => {
                       <Calendar className="h-4 sm:h-5 w-4 sm:w-5 flex-shrink-0 text-blue-600" />
                       <div>
                         <p className="text-xs sm:text-sm font-medium text-gray-600">Date</p>
-                        <p className="text-sm sm:text-base text-gray-800">{category.date.slice(0, 10)}</p>
+                        <p className="text-sm sm:text-base text-gray-800">
+                          {category.date.slice(0, 10)}
+                        </p>
                       </div>
                     </div>
 
@@ -159,7 +167,9 @@ const CategoryDesign = () => {
                       <Clock className="h-4 sm:h-5 w-4 sm:w-5 flex-shrink-0 text-blue-600" />
                       <div>
                         <p className="text-xs sm:text-sm font-medium text-gray-600">Time</p>
-                        <p className="text-sm sm:text-base text-gray-800">{category.date.slice(11, 19)}</p>
+                        <p className="text-sm sm:text-base text-gray-800">
+                          {category.date.slice(11, 19)}
+                        </p>
                       </div>
                     </div>
                   </>

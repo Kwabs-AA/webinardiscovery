@@ -43,44 +43,43 @@ const DashboardComponent = () => {
   const [loading, setLoading] = useState(true);
     
   useEffect(() => {
-      const fetchData = async () => {
-        if (status === "authenticated" && session?.user?.email) {
-          setLoading(true); // Start loading
-          try {
-            const [enrollRes, eventsRes] = await Promise.all([
-              fetch(`/api/enrollment?email=${encodeURIComponent(session.user.email)}`),
-              fetch(`/api/webinars?email=${encodeURIComponent(session.user.email)}`),
-            ]);
-    
-            if (!enrollRes.ok || !eventsRes.ok) {
-              throw new Error('Failed to fetch data');
-            }
-    
-            const [enrollData, eventsData] = await Promise.all([
-              enrollRes.json(),
-              eventsRes.json(),
-            ]);
-    
-            setEnrollments(enrollData);
-            setUpcomingEvents(eventsData);
-          } catch (error) {
-            console.error('Error fetching dashboard data:', error);
-          } finally {
-            setLoading(false); // Stop loading
+    const fetchData = async () => {
+      if (status === "loading") {
+        // Wait for session to resolve
+        return;
+      }
+  
+      if (status === "authenticated" && session?.user?.email) {
+        setLoading(true); // Start loading
+        try {
+          const [enrollRes, eventsRes] = await Promise.all([
+            fetch(`/api/enrollment?email=${encodeURIComponent(session.user.email)}`),
+            fetch(`/api/webinars?email=${encodeURIComponent(session.user.email)}`),
+          ]);
+  
+          if (!enrollRes.ok || !eventsRes.ok) {
+            throw new Error('Failed to fetch data');
           }
+  
+          const [enrollData, eventsData] = await Promise.all([
+            enrollRes.json(),
+            eventsRes.json(),
+          ]);
+  
+          setEnrollments(enrollData);
+          setUpcomingEvents(eventsData);
+        } catch (error) {
+          console.error('Error fetching dashboard data:', error);
+        } finally {
+          setLoading(false); // Stop loading
         }
-        if(status === "unauthenticated"){
-          if(!session){
-            router.push("/signin")
-          }
-          else{
-            window.location.reload();
-          }
-        }
-      };
-    
-      fetchData();
-    }, [status, session, router]);
+      } else if (status === "unauthenticated") {
+        router.push("/signin");
+      }
+    };
+  
+    fetchData();
+  }, [status, session, router]);
     
 
   // Show loading state while checking authentication
