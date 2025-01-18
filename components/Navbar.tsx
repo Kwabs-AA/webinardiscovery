@@ -90,7 +90,7 @@ const Navbar = ({ children }: any) => {
       <div className="flex pt-16 min-h-screen">
         {/* Short Nav */}
         {shortnav && !isAnimating && (
-          <div className="fixed top-16 left-0 bottom-0 z-40">
+          <div className="hidden md:block fixed top-16 left-0 bottom-0 z-40">
             <ShortLeftHomeNav />
           </div>
         )}
@@ -114,7 +114,11 @@ const Navbar = ({ children }: any) => {
         </AnimatePresence>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto p-4 ml-[72px]">
+        <main
+          className={`flex-1 overflow-auto p-4 ${
+            shortnav ? "md:ml-[72px]" : ""
+          }`}
+        >
           {children}
         </main>
       </div>
