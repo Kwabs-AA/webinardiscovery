@@ -55,7 +55,7 @@ const Navbar = ({ children }: any) => {
       {/* Navbar */}
       <header className="fixed top-0 left-0 right-0 bg-base-100 border-b-2 border-gray-300 z-50">
         <div className="h-16 flex items-center">
-          <div className="flex-none">
+          <div className="flex-none mx-2">
             <motion.button
               className="btn btn-square btn-ghost"
               onClick={handleNav}
@@ -78,7 +78,7 @@ const Navbar = ({ children }: any) => {
             </motion.button>
           </div>
           <div className="flex-1"></div>
-          <div className="flex-none">
+          <div className="flex-none mx-6">
             <SessionProvider>
               <Userbutton />
             </SessionProvider>
